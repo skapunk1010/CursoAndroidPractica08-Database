@@ -31,8 +31,111 @@ public class MainActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-
+		btnAlta = (Button) findViewById(R.id.btnAlta);
+		btnBaja = (Button) findViewById(R.id.btnBaja);
+		btnConsulta = (Button) findViewById(R.id.btnConsulta);
+		btnModificar = (Button) findViewById(R.id.btnModificacion);
+		btnLimpiar = (Button) findViewById(R.id.btnLimpiar);
 		
+		btnAlta.setOnClickListener(this);
+		btnBaja.setOnClickListener(this);
+		btnConsulta.setOnClickListener(this);
+		btnModificar.setOnClickListener(this);
+		btnLimpiar.setOnClickListener(this);
+		
+		editCodigo = (EditText) findViewById(R.id.editTextCodigo);
+		editNombre = (EditText) findViewById(R.id.editTextNombre);
+		editCarrera = (EditText) findViewById(R.id.editTextCarrera);
+		editEmail = (EditText) findViewById(R.id.editTextEmail);
+		
+		
+	}
+	public void limpiar(){
+		editCodigo.setText("");
+		editNombre.setText("");
+		editCarrera.setText("");
+		editEmail.setText("");
+	}
+	
+	public void alta(){
+		//Acceso a la base datos
+		helper = new MyOpenHelper(this);
+		db = helper.getWritableDatabase();
+		
+		//Rescatar los datos
+		ContentValues content = new ContentValues();
+		content.put("nombre", editNombre.getText().toString());
+		content.put("codigo", editCodigo.getText().toString());
+		content.put("carrera", editCarrera.getText().toString());
+		content.put("email", editEmail.getText().toString());
+		
+		//Limpiar campos
+		limpiar();
+		
+		//Hacer insercion en la Base de Datos
+		db.insert("Alumno", null, content);
+		db.close();
+		
+		Toast.makeText(getApplicationContext(), "Alta exitosa!", Toast.LENGTH_SHORT).show();	
+	}
+	
+	public void baja(){
+		//Acceso a la Base de Datos
+		helper = new MyOpenHelper(this);
+		db = helper.getWritableDatabase();
+		
+		//Rescatamos datos
+		String codigo = editCodigo.getText().toString();
+		limpiar();
+		
+		//Ejecutamos consulta
+		db.delete("Alumno", "codigo = ?", new String[]{codigo});
+		db.close();
+		
+		Toast.makeText(getApplicationContext(), "Baja exitosa!", Toast.LENGTH_SHORT).show();
+	}
+	
+	public void modificar(){
+		//Acceso a la base datos
+		helper = new MyOpenHelper(this);
+		db = helper.getWritableDatabase();
+		
+		//Rescatar los datos
+		ContentValues content = new ContentValues();
+		String codigo = editNombre.getText().toString();
+		content.put("nombre", codigo);
+		content.put("codigo", editCodigo.getText().toString());
+		content.put("carrera", editCarrera.getText().toString());
+		content.put("email", editEmail.getText().toString());
+		
+		//Limpiar campos
+		limpiar();
+		
+		//Hacer insercion en la Base de Datos
+		db.update("Alumno", content, "codigo = ?", new String[]{codigo});
+		db.close();
+		
+		Toast.makeText(getApplicationContext(), "Modificacion exitosa!", Toast.LENGTH_SHORT).show();
+	}
+	
+	public void consulta(){
+		//Acceso a la base datos
+		helper = new MyOpenHelper(this);
+		db = helper.getWritableDatabase();
+		
+		String codigo = editCodigo.getText().toString();
+		
+		Cursor cursor = db.rawQuery("SELECT * FROM Alumno WHERE codigo = ? ", new String[]{codigo});
+		
+		if(cursor.moveToFirst()){
+			editNombre.setText(cursor.getString(2));
+			editCarrera.setText(cursor.getString(3));
+			editEmail.setText(cursor.getString(4));
+			Toast.makeText(getApplicationContext(), "Registro con Id:"+cursor.getString(0), Toast.LENGTH_SHORT).show();
+		}else{
+			Toast.makeText(getApplicationContext(), "No hay coincidencias!", Toast.LENGTH_SHORT).show();
+		}
+		db.close();
 	}
 	
 	@Override

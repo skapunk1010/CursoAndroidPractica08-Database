@@ -16,7 +16,7 @@ public class MyOpenHelper extends SQLiteOpenHelper {
 		// TODO Auto-generated method stub
 		db.execSQL("CREATE TABLE Alumno("+
 					"idAlumno INTEGER AUTO_INCREMENT PRIMARY KEY,"+
-					"codigo VARCHAR(20) NOT NULL,"+
+					"codigo VARCHAR(20) NOT NULL UNIQUE,"+
 					"nombre TEXT NOT NULL,"+
 					"carrera TEXT NOT NULL,"+
 					"email VARCHAR(50))");
@@ -27,5 +27,7 @@ public class MyOpenHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS Alumno");
 		onCreate(db);
 	}
+	
+//	Erick Martinez  fb.com/skapunk1010
 
 }
