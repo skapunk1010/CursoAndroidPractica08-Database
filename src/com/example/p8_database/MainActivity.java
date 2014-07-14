@@ -97,14 +97,14 @@ public class MainActivity extends Activity implements OnClickListener{
 	
 	public void modificar(){
 		//Acceso a la base datos
-		helper = new MyOpenHelper(this);
-		db = helper.getWritableDatabase();
+		MyOpenHelper helper = new MyOpenHelper(this);
+		SQLiteDatabase db = helper.getWritableDatabase();
 		
 		//Rescatar los datos
 		ContentValues content = new ContentValues();
-		String codigo = editNombre.getText().toString();
-		content.put("nombre", codigo);
-		content.put("codigo", editCodigo.getText().toString());
+		String codigo = editCodigo.getText().toString();
+		content.put("codigo", codigo);
+		content.put("nombre", editNombre.getText().toString());
 		content.put("carrera", editCarrera.getText().toString());
 		content.put("email", editEmail.getText().toString());
 		
@@ -112,10 +112,14 @@ public class MainActivity extends Activity implements OnClickListener{
 		limpiar();
 		
 		//Hacer insercion en la Base de Datos
-		db.update("Alumno", content, "codigo = ?", new String[]{codigo});
+		int x = db.update("Alumno", content, "codigo = ?", new String[]{codigo});
 		db.close();
+		if(x > 0){			
+			Toast.makeText(getApplicationContext(), x+" registros modificados! ", Toast.LENGTH_SHORT).show();
+		}else {
+			Toast.makeText(getApplicationContext(), "No existe la persona! "+x, Toast.LENGTH_SHORT).show();
+		}
 		
-		Toast.makeText(getApplicationContext(), "Modificacion exitosa!", Toast.LENGTH_SHORT).show();
 	}
 	
 	public void consulta(){

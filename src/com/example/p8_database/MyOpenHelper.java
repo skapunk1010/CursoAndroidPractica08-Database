@@ -15,7 +15,7 @@ public class MyOpenHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
 		db.execSQL("CREATE TABLE Alumno("+
-					"idAlumno INTEGER AUTO_INCREMENT PRIMARY KEY,"+
+					"idAlumno INTEGER PRIMARY KEY AUTO_INCREMENT,"+
 					"codigo VARCHAR(20) NOT NULL UNIQUE,"+
 					"nombre TEXT NOT NULL,"+
 					"carrera TEXT NOT NULL,"+
